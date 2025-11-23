@@ -1,0 +1,1075 @@
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <title>WCU Cross Country Recruiting Workflow</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+
+  <style>
+    :root {
+      --red: #d4103a;
+      --black: #000000;
+      --gray: #555555;
+      --light-gray: #f3f3f3;
+      --white: #ffffff;
+    }
+
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+      font-family: system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI",
+        sans-serif;
+    }
+
+    body {
+      background: #111;
+      color: var(--white);
+      min-height: 100vh;
+      display: flex;
+      flex-direction: column;
+    }
+
+    header {
+      background: var(--black);
+      border-bottom: 4px solid var(--red);
+      padding: 0.8rem 1.5rem;
+      display: flex;
+      align-items: center;
+      gap: 1rem;
+    }
+
+    header img.logo {
+      height: 52px;
+      width: auto;
+    }
+
+    header .titles {
+      display: flex;
+      flex-direction: column;
+    }
+
+    header .titles h1 {
+      font-size: 1.1rem;
+      letter-spacing: 0.08em;
+      text-transform: uppercase;
+      color: var(--white);
+    }
+
+    header .titles span {
+      font-size: 0.85rem;
+      color: #ddd;
+      text-transform: uppercase;
+    }
+
+    main {
+      flex: 1;
+      display: flex;
+      min-height: 0;
+    }
+
+    /* Sidebar (workflow steps) */
+    .sidebar {
+      width: 280px;
+      background: #141414;
+      border-right: 1px solid #222;
+      padding: 1rem 0.75rem 1.5rem;
+      display: flex;
+      flex-direction: column;
+      gap: 1rem;
+    }
+
+    .sidebar h2 {
+      font-size: 0.9rem;
+      text-transform: uppercase;
+      letter-spacing: 0.12em;
+      color: #bbb;
+      padding: 0 0.5rem;
+    }
+
+    .workflow-steps {
+      list-style: none;
+      margin-top: 0.25rem;
+    }
+
+    .workflow-steps li {
+      margin-bottom: 0.4rem;
+    }
+
+    .workflow-button {
+      width: 100%;
+      text-align: left;
+      border-radius: 0.35rem;
+      border: none;
+      padding: 0.6rem 0.7rem;
+      background: transparent;
+      color: #ddd;
+      font-size: 0.95rem;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      cursor: pointer;
+      transition: background 0.15s ease, color 0.15s ease, transform 0.05s ease;
+    }
+
+    .workflow-button span.step-label {
+      display: inline-flex;
+      align-items: center;
+      gap: 0.5rem;
+    }
+
+    .workflow-button .step-number {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      width: 1.2rem;
+      height: 1.2rem;
+      border-radius: 999px;
+      border: 1px solid #444;
+      font-size: 0.75rem;
+    }
+
+    .workflow-button.active {
+      background: linear-gradient(90deg, var(--red), #7a071f);
+      color: var(--white);
+      transform: translateX(2px);
+    }
+
+    .workflow-button:hover:not(.active)) {
+      background: #1f1f1f;
+    }
+
+    .sidebar-footer {
+      margin-top: auto;
+      padding-top: 0.75rem;
+      border-top: 1px solid #222;
+      font-size: 0.8rem;
+      color: #999;
+    }
+
+    .sidebar-footer a {
+      color: var(--red);
+      text-decoration: none;
+      font-weight: 600;
+    }
+
+    .sidebar-footer a:hover {
+      text-decoration: underline;
+    }
+
+    /* Content area */
+    .content {
+      flex: 1;
+      padding: 1.25rem 1.5rem 1.5rem;
+      background: radial-gradient(circle at top left, #2b2b2b 0, #101010 40%, #000 100%);
+      overflow-y: auto;
+    }
+
+    .panel {
+      display: none;
+      animation: fadeIn 0.18s ease-out;
+    }
+
+    .panel.active {
+      display: block;
+    }
+
+    @keyframes fadeIn {
+      from {
+        opacity: 0;
+        transform: translateY(4px);
+      }
+      to {
+        opacity: 1;
+        transform: translateY(0);
+      }
+    }
+
+    .panel-header {
+      margin-bottom: 1rem;
+    }
+
+    .panel-header h2 {
+      font-size: 1.15rem;
+      text-transform: uppercase;
+      letter-spacing: 0.12em;
+      margin-bottom: 0.25rem;
+    }
+
+    .panel-header p {
+      font-size: 0.9rem;
+      color: #ccc;
+    }
+
+    .pill {
+      display: inline-flex;
+      align-items: center;
+      gap: 0.4rem;
+      font-size: 0.75rem;
+      text-transform: uppercase;
+      letter-spacing: 0.14em;
+      padding: 0.25rem 0.6rem;
+      border-radius: 999px;
+      background: rgba(212, 16, 58, 0.15);
+      color: #eee;
+      margin-bottom: 0.6rem;
+    }
+
+    .pill span.dot {
+      width: 6px;
+      height: 6px;
+      border-radius: 999px;
+      background: var(--red);
+    }
+
+    .card-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
+      gap: 1rem;
+      margin-top: 0.75rem;
+    }
+
+    .card {
+      background: rgba(0, 0, 0, 0.7);
+      border-radius: 0.6rem;
+      border: 1px solid #262626;
+      padding: 0.9rem 0.9rem 0.9rem;
+      display: flex;
+      flex-direction: column;
+      gap: 0.4rem;
+    }
+
+    .card-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: baseline;
+      gap: 0.5rem;
+    }
+
+    .card-header h3 {
+      font-size: 0.95rem;
+      text-transform: uppercase;
+      letter-spacing: 0.1em;
+      color: #f5f5f5;
+    }
+
+    .card-header span.tag {
+      font-size: 0.7rem;
+      padding: 0.2rem 0.5rem;
+      border-radius: 999px;
+      background: #1f1f1f;
+      text-transform: uppercase;
+      letter-spacing: 0.12em;
+      color: #bbb;
+    }
+
+    .card p {
+      font-size: 0.85rem;
+      color: #ccc;
+      line-height: 1.4;
+    }
+
+    .button-row {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 0.5rem;
+      margin-top: 0.35rem;
+    }
+
+    .btn {
+      border-radius: 999px;
+      border: none;
+      padding: 0.4rem 0.85rem;
+      font-size: 0.8rem;
+      text-transform: uppercase;
+      letter-spacing: 0.12em;
+      cursor: pointer;
+      display: inline-flex;
+      align-items: center;
+      gap: 0.4rem;
+      text-decoration: none;
+    }
+
+    .btn-primary {
+      background: var(--red);
+      color: var(--white);
+    }
+
+    .btn-secondary {
+      background: #1f1f1f;
+      color: #eee;
+      border: 1px solid #333;
+    }
+
+    .btn-outline {
+      background: transparent;
+      color: #ddd;
+      border: 1px solid #444;
+    }
+
+    .btn-primary:hover {
+      filter: brightness(1.05);
+    }
+
+    .btn-secondary:hover,
+    .btn-outline:hover {
+      background: #272727;
+    }
+
+    .preview {
+      margin-top: 0.75rem;
+      background: var(--light-gray);
+      border-radius: 0.4rem;
+      overflow: hidden;
+      border: 1px solid #ddd;
+    }
+
+    .preview iframe,
+    .preview img {
+      width: 100%;
+      display: block;
+    }
+
+    .preview-note {
+      font-size: 0.75rem;
+      color: #ccc;
+      margin-top: 0.35rem;
+    }
+
+    .file-list {
+      margin-top: 0.75rem;
+    }
+
+    .file-list-item {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      padding: 0.5rem 0.2rem;
+      border-bottom: 1px solid #222;
+      font-size: 0.9rem;
+    }
+
+    .file-list-item span.path {
+      color: #bbb;
+      font-size: 0.8rem;
+    }
+
+    .file-list-item a {
+      text-decoration: none;
+      font-size: 0.75rem;
+      padding: 0.3rem 0.7rem;
+      border-radius: 999px;
+      border: 1px solid #444;
+      color: #eee;
+    }
+
+    .file-list-item a:hover {
+      background: #222;
+    }
+
+    /* Recruit form styling */
+    .recruit-form input,
+    .recruit-form textarea {
+      background: #111;
+      border-radius: 0.3rem;
+      border: 1px solid #333;
+      padding: 0.35rem 0.5rem;
+      font-size: 0.8rem;
+      color: #eee;
+      width: 100%;
+    }
+
+    .recruit-form input::placeholder,
+    .recruit-form textarea::placeholder {
+      color: #777;
+    }
+
+    /* Recently added recruits grid */
+    .recent-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
+      gap: 0.6rem;
+      margin-top: 0.5rem;
+    }
+
+    .recruit-card {
+      background: #151515;
+      border: 1px solid #262626;
+      border-radius: 0.5rem;
+      padding: 0.55rem 0.6rem;
+      display: flex;
+      gap: 0.55rem;
+      align-items: flex-start;
+    }
+
+    .recruit-photo {
+      width: 42px;
+      height: 42px;
+      border-radius: 999px;
+      background: #262626;
+      overflow: hidden;
+      flex-shrink: 0;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 0.8rem;
+      color: #ccc;
+      text-transform: uppercase;
+    }
+
+    .recruit-photo img {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+      display: block;
+    }
+
+    .recruit-info {
+      flex: 1;
+      min-width: 0;
+    }
+
+    .recruit-info .name-line {
+      font-size: 0.88rem;
+      font-weight: 600;
+      color: #f5f5f5;
+    }
+
+    .recruit-info .meta-line {
+      font-size: 0.8rem;
+      color: #ccc;
+    }
+
+    .recruit-info .meta-line span {
+      margin-right: 0.35rem;
+    }
+
+    .recruit-info .time-line {
+      font-size: 0.75rem;
+      color: #888;
+      margin-top: 0.15rem;
+    }
+
+    @media (max-width: 840px) {
+      main {
+        flex-direction: column;
+      }
+
+      .sidebar {
+        width: 100%;
+        flex-direction: row;
+        overflow-x: auto;
+        border-right: none;
+        border-bottom: 1px solid #222;
+      }
+
+      .sidebar h2 {
+        display: none;
+      }
+
+      .workflow-steps {
+        display: flex;
+        flex-wrap: nowrap;
+        gap: 0.4rem;
+      }
+
+      .workflow-steps li {
+        margin-bottom: 0;
+        min-width: 180px;
+      }
+
+      .sidebar-footer {
+        display: none;
+      }
+    }
+  </style>
+</head>
+
+<body>
+  <header>
+    <!-- Update path if needed for your logo -->
+    <img src="assets/William-Carey-Logo.jpg" alt="William Carey Knight Logo" class="logo" />
+    <div class="titles">
+      <h1>William Carey University</h1>
+      <span>Cross Country · Recruiting Workflow Portal</span>
+    </div>
+  </header>
+
+  <main>
+    <aside class="sidebar">
+      <div>
+        <h2>Workflow</h2>
+        <ul class="workflow-steps">
+          <li>
+            <button class="workflow-button active" data-panel="panel-orient">
+              <span class="step-label">
+                <span class="step-number">1</span>
+                Orientation
+              </span>
+              <span>▶</span>
+            </button>
+          </li>
+          <li>
+            <button class="workflow-button" data-panel="panel-board">
+              <span class="step-label">
+                <span class="step-number">2</span>
+                Build Board
+              </span>
+              <span>▶</span>
+            </button>
+          </li>
+          <li>
+            <button class="workflow-button" data-panel="panel-evaluate">
+              <span class="step-label">
+                <span class="step-number">3</span>
+                Evaluate &amp; Offer
+              </span>
+              <span>▶</span>
+            </button>
+          </li>
+          <li>
+            <button class="workflow-button" data-panel="panel-sign">
+              <span class="step-label">
+                <span class="step-number">4</span>
+                Sign &amp; Announce
+              </span>
+              <span>▶</span>
+            </button>
+          </li>
+          <li>
+            <button class="workflow-button" data-panel="panel-assets">
+              <span class="step-label">
+                <span class="step-number">5</span>
+                All Files
+              </span>
+              <span>▶</span>
+            </button>
+          </li>
+        </ul>
+      </div>
+
+      <div class="sidebar-footer">
+        Need to share this with staff?<br />
+        Send them this page or the
+        <a href="assets/WCU_Recruiting_System_Package_v2.zip" download>full ZIP</a>.
+      </div>
+    </aside>
+
+    <section class="content">
+      <!-- PANEL 1: ORIENTATION -->
+      <div id="panel-orient" class="panel active">
+        <div class="panel-header">
+          <div class="pill"><span class="dot"></span> Step 1 · Orientation</div>
+          <h2>Learn the System</h2>
+          <p>Start here: read the manual, review the branding, and understand the full Carey XC recruiting process.</p>
+        </div>
+
+        <div class="card-grid">
+          <article class="card">
+            <div class="card-header">
+              <h3>Recruiting Manual</h3>
+              <span class="tag">PDF</span>
+            </div>
+            <p>The complete William Carey University Cross Country recruiting manual: philosophy, workflow, scripts, and tools.</p>
+            <div class="button-row">
+              <a class="btn btn-primary" href="assets/WCU_Recruiting_Manual_Designed_FULL_CONTENT.pdf" target="_blank">
+                Open Manual
+              </a>
+              <a class="btn btn-outline" href="assets/WCU_Recruiting_Manual_Designed_FULL_CONTENT.pdf" download>
+                Download PDF
+              </a>
+            </div>
+            <div class="preview">
+              <iframe src="assets/WCU_Recruiting_Manual_Designed_FULL_CONTENT.pdf#page=1" height="260"
+                title="Recruiting Manual Preview"></iframe>
+            </div>
+            <div class="preview-note">If the preview doesn’t load in your browser, use the download button.</div>
+          </article>
+
+          <article class="card">
+            <div class="card-header">
+              <h3>Branding Sheet</h3>
+              <span class="tag">Identity</span>
+            </div>
+            <p>Official Cross Country color codes, fonts, and logo usage rules so every piece of communication matches.</p>
+            <div class="button-row">
+              <a class="btn btn-secondary" href="assets/WCU_Branding_Sheet.pdf" target="_blank">View Branding Sheet</a>
+              <a class="btn btn-outline" href="assets/WCU_Branding_Sheet.pdf" download>Download PDF</a>
+            </div>
+          </article>
+        </div>
+      </div>
+
+      <!-- PANEL 2: BUILD BOARD -->
+      <div id="panel-board" class="panel">
+        <div class="panel-header">
+          <div class="pill"><span class="dot"></span> Step 2 · Build Board</div>
+          <h2>Identify & Track Prospects</h2>
+          <p>Use the recruiting tracker and intake form to log prospects, tiers, contacts, and scholarship dollars.</p>
+        </div>
+
+        <div class="card-grid">
+          <article class="card">
+            <div class="card-header">
+              <h3>Recruiting Tracker</h3>
+              <span class="tag">Excel</span>
+            </div>
+            <p>Dashboard, Master Prospect List, Tier standards, Contact log, Visits &amp; Offers, Scholarship budget.</p>
+            <div class="button-row">
+              <a class="btn btn-primary" href="assets/WCU_Recruiting_Tracker_Expanded.xlsx" download>
+                Download Tracker
+              </a>
+              <a class="btn btn-outline" href="assets/WCU_Recruiting_System_Package_v2.zip" download>
+                Download Full Package
+              </a>
+            </div>
+            <div class="preview-note">
+              Tip: Upload this file to Google Sheets or Excel Online and share with staff.
+            </div>
+          </article>
+
+          <article class="card">
+            <div class="card-header">
+              <h3>How to Use</h3>
+              <span class="tag">Checklist</span>
+            </div>
+            <p>
+              1. Enter every new prospect on the <b>Master Prospect List</b> via the form.<br />
+              2. Assign Tier based on standards.<br />
+              3. Record every text/call/DM in the <b>Contact Log</b>.<br />
+              4. Move athletes into <b>Visits &amp; Offers</b> as they progress.<br />
+              5. Monitor scholarship totals in the <b>Scholarship Budget</b> tab.
+            </p>
+          </article>
+
+          <!-- Recruit Intake Form with Photo URL -->
+          <article class="card">
+            <div class="card-header">
+              <h3>Add New Recruit</h3>
+              <span class="tag">Form → Google Sheet</span>
+            </div>
+            <p>Submit a new prospect directly into the Google Sheet recruiting tracker, including an optional photo URL.</p>
+
+            <form id="recruitForm" class="recruit-form">
+              <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(140px,1fr));gap:0.4rem;margin-top:0.5rem;">
+                <input type="text" name="name" placeholder="Name" required />
+                <input type="text" name="gradYear" placeholder="Grad Year (e.g. 2026)" required />
+                <input type="text" name="pr5k" placeholder="PR 5K" />
+                <input type="text" name="pr3200" placeholder="PR 3200" />
+                <input type="text" name="pr1600" placeholder="PR 1600" />
+                <input type="text" name="gpa" placeholder="GPA" />
+                <input type="text" name="coach" placeholder="Coach Name" />
+                <input type="text" name="contact" placeholder="Email or Phone" />
+                <input type="text" name="tier" placeholder="Tier (1 / 2 / 3)" />
+                <input type="text" name="photoUrl" placeholder="Photo URL (optional)" />
+              </div>
+              <textarea name="notes" placeholder="Notes (character, fit, meets, etc.)"
+                style="margin-top:0.4rem;min-height:60px;"></textarea>
+
+              <div class="button-row" style="margin-top:0.5rem;">
+                <button type="submit" class="btn btn-primary" id="recruitFormSubmit">
+                  Save to Google Sheet
+                </button>
+                <button type="button" class="btn btn-outline" id="recruitFormReset">
+                  Clear
+                </button>
+              </div>
+              <div id="recruitFormMessage" class="preview-note"></div>
+            </form>
+          </article>
+
+          <!-- Recently Added Recruits (visual) -->
+          <article class="card">
+            <div class="card-header">
+              <h3>Recently Added Recruits</h3>
+              <span class="tag">Live</span>
+            </div>
+            <p>The latest recruits submitted via the intake form.</p>
+            <div id="recentRecruitsGrid" class="recent-grid">
+              <div class="preview-note">Loading…</div>
+            </div>
+          </article>
+        </div>
+      </div>
+
+      <!-- PANEL 3: EVALUATE & OFFER -->
+      <div id="panel-evaluate" class="panel">
+        <div class="panel-header">
+          <div class="pill"><span class="dot"></span> Step 3 · Evaluate &amp; Offer</div>
+          <h2>Use Standards & Letterhead</h2>
+          <p>Evaluate prospects with visual standards cards and formalize offers with branded scholarship letters.</p>
+        </div>
+
+        <div class="card-grid">
+          <article class="card">
+            <div class="card-header">
+              <h3>Performance Standards Cards</h3>
+              <span class="tag">Graphics</span>
+            </div>
+            <p>Tier 1–3 performance standards for Men’s &amp; Women’s XC, formatted for quick reference or posting.</p>
+            <div class="button-row">
+              <a class="btn btn-primary"
+                href="assets/A_pair_of_digital_graphic_designs_display_performa.png"
+                target="_blank">
+                View Cards
+              </a>
+              <a class="btn btn-outline"
+                href="assets/A_pair_of_digital_graphic_designs_display_performa.png"
+                download>
+                Download PNG
+              </a>
+            </div>
+            <div class="preview">
+              <img src="assets/A_pair_of_digital_graphic_designs_display_performa.png"
+                alt="Men's & Women's Standards Cards Preview" />
+            </div>
+          </article>
+
+          <article class="card">
+            <div class="card-header">
+              <h3>Scholarship Letterhead</h3>
+              <span class="tag">PDF / PNG</span>
+            </div>
+            <p>Official William Carey Cross Country scholarship award letter template with logo and red banner.</p>
+            <div class="button-row">
+              <a class="btn btn-secondary" href="assets/WCU_Scholarship_Letterhead.pdf" target="_blank">
+                Open PDF
+              </a>
+              <a class="btn btn-outline" href="assets/WCU_Scholarship_Letterhead.pdf" download>
+                Download PDF
+              </a>
+              <a class="btn btn-outline" href="assets/WCU_Scholarship_Letterhead.png" download>
+                Download PNG
+              </a>
+            </div>
+            <div class="preview-note">
+              Use the PDF for print-ready letters and the PNG as a background in Word/Google Docs.
+            </div>
+          </article>
+        </div>
+      </div>
+
+      <!-- PANEL 4: SIGN & ANNOUNCE -->
+      <div id="panel-sign" class="panel">
+        <div class="panel-header">
+          <div class="pill"><span class="dot"></span> Step 4 · Sign &amp; Announce</div>
+          <h2>Commitments & Social Media</h2>
+          <p>Once an athlete commits, move them into signing graphics and social media announcements.</p>
+        </div>
+
+        <div class="card-grid">
+          <article class="card">
+            <div class="card-header">
+              <h3>Commitment Graphics Pack</h3>
+              <span class="tag">PNG</span>
+            </div>
+            <p>Horizontal, square, and vertical “Committed to William Carey University” templates for announcements.</p>
+            <div class="button-row">
+              <a class="btn btn-primary"
+                href="assets/A_set_of_three_digital_graphic_commitment_announce.png"
+                target="_blank">
+                View Pack
+              </a>
+              <a class="btn btn-outline"
+                href="assets/A_set_of_three_digital_graphic_commitment_announce.png"
+                download>
+                Download PNG
+              </a>
+            </div>
+            <div class="preview">
+              <img src="assets/A_set_of_three_digital_graphic_commitment_announce.png"
+                alt="Commitment Graphics Pack Preview" />
+            </div>
+            <div class="preview-note">
+              Open in Canva/Photoshop/Keynote and add each athlete’s name, photo, and signing details.
+            </div>
+          </article>
+
+          <article class="card">
+            <div class="card-header">
+              <h3>Social Media Kit</h3>
+              <span class="tag">PNG</span>
+            </div>
+            <p>Story & post templates for “Visiting WCU”, “Meet the Recruit”, “Official Visit Day”, and “Signed”.</p>
+            <div class="button-row">
+              <a class="btn btn-secondary"
+                href="assets/A_collection_of_four_digital_graphic_announcements.png"
+                target="_blank">
+                View Kit
+              </a>
+              <a class="btn btn-outline"
+                href="assets/A_collection_of_four_digital_graphic_announcements.png"
+                download>
+                Download PNG
+              </a>
+            </div>
+            <div class="preview">
+              <img src="assets/A_collection_of_four_digital_graphic_announcements.png"
+                alt="Social Media Kit Preview" />
+            </div>
+            <div class="preview-note">
+              Slice into individual templates or overlay text boxes in your editing app.
+            </div>
+          </article>
+        </div>
+      </div>
+
+      <!-- PANEL 5: ALL FILES -->
+      <div id="panel-assets" class="panel">
+        <div class="panel-header">
+          <div class="pill"><span class="dot"></span> Step 5 · All Files</div>
+          <h2>Download Center</h2>
+          <p>Every asset from the recruiting system in one place.</p>
+        </div>
+
+        <div class="card">
+          <div class="card-header">
+            <h3>Complete Package</h3>
+            <span class="tag">ZIP</span>
+          </div>
+          <p>Grab everything at once: manual, tracker, graphics, standards, letterhead, and social kit.</p>
+          <div class="button-row">
+            <a class="btn btn-primary" href="assets/WCU_Recruiting_System_Package_v2.zip" download>
+              Download Full ZIP
+            </a>
+          </div>
+        </div>
+
+        <div class="file-list">
+          <div class="file-list-item">
+            <div>
+              <strong>Recruiting Manual (Designed)</strong><br />
+              <span class="path">assets/WCU_Recruiting_Manual_Designed_FULL_CONTENT.pdf</span>
+            </div>
+            <a href="assets/WCU_Recruiting_Manual_Designed_FULL_CONTENT.pdf" download>Download</a>
+          </div>
+          <div class="file-list-item">
+            <div>
+              <strong>Recruiting Tracker (Expanded)</strong><br />
+              <span class="path">assets/WCU_Recruiting_Tracker_Expanded.xlsx</span>
+            </div>
+            <a href="assets/WCU_Recruiting_Tracker_Expanded.xlsx" download>Download</a>
+          </div>
+          <div class="file-list-item">
+            <div>
+              <strong>Branding Sheet</strong><br />
+              <span class="path">assets/WCU_Branding_Sheet.pdf</span>
+            </div>
+            <a href="assets/WCU_Branding_Sheet.pdf" download>Download</a>
+          </div>
+          <div class="file-list-item">
+            <div>
+              <strong>Scholarship Letterhead (PDF)</strong><br />
+              <span class="path">assets/WCU_Scholarship_Letterhead.pdf</span>
+            </div>
+            <a href="assets/WCU_Scholarship_Letterhead.pdf" download>Download</a>
+          </div>
+          <div class="file-list-item">
+            <div>
+              <strong>Scholarship Letterhead (PNG)</strong><br />
+              <span class="path">assets/WCU_Scholarship_Letterhead.png</span>
+            </div>
+            <a href="assets/WCU_Scholarship_Letterhead.png" download>Download</a>
+          </div>
+          <div class="file-list-item">
+            <div>
+              <strong>Performance Standards Cards</strong><br />
+              <span class="path">assets/A_pair_of_digital_graphic_designs_display_performa.png</span>
+            </div>
+            <a href="assets/A_pair_of_digital_graphic_designs_display_performa.png" download>Download</a>
+          </div>
+          <div class="file-list-item">
+            <div>
+              <strong>Commitment Graphics Pack</strong><br />
+              <span class="path">assets/A_set_of_three_digital_graphic_commitment_announce.png</span>
+            </div>
+            <a href="assets/A_set_of_three_digital_graphic_commitment_announce.png" download>Download</a>
+          </div>
+          <div class="file-list-item">
+            <div>
+              <strong>Social Media Kit</strong><br />
+              <span class="path">assets/A_collection_of_four_digital_graphic_announcements.png</span>
+            </div>
+            <a href="assets/A_collection_of_four_digital_graphic_announcements.png" download>Download</a>
+          </div>
+        </div>
+      </div>
+    </section>
+  </main>
+
+  <script>
+    // ========= SIDEBAR NAVIGATION: PANEL SWITCHING =========
+    const buttons = document.querySelectorAll(".workflow-button");
+    const panels = document.querySelectorAll(".panel");
+
+    buttons.forEach((btn) => {
+      btn.addEventListener("click", () => {
+        const targetId = btn.dataset.panel;
+
+        buttons.forEach((b) => b.classList.remove("active"));
+        panels.forEach((p) => p.classList.remove("active"));
+
+        btn.classList.add("active");
+        document.getElementById(targetId).classList.add("active");
+
+        // When switching to Build Board, refresh recent recruits
+        if (targetId === "panel-board") {
+          loadRecentRecruits();
+        }
+      });
+    });
+
+    // ========= GOOGLE APPS SCRIPT URL (BACKEND) =========
+    // TODO: Replace this string with your actual Apps Script Web App URL
+    const SCRIPT_URL = "https://script.google.com/macros/s/AKfycbyzPoPFa5na8y9n1jHxpyT1aNXIchDA3HTYosNR1y1Lda1080LhytdzY112KaLttuZtog/exec";
+
+    // ========= RECRUIT FORM → GOOGLE SHEET =========
+    const recruitForm = document.getElementById("recruitForm");
+    const recruitFormMessage = document.getElementById("recruitFormMessage");
+    const recruitFormSubmit = document.getElementById("recruitFormSubmit");
+    const recruitFormReset = document.getElementById("recruitFormReset");
+
+    if (recruitForm) {
+      recruitForm.addEventListener("submit", async (e) => {
+        e.preventDefault();
+        recruitFormMessage.textContent = "";
+        recruitFormSubmit.disabled = true;
+        recruitFormSubmit.textContent = "Saving...";
+
+        const formData = new FormData(recruitForm);
+        const payload = {
+          name: formData.get("name"),
+          gradYear: formData.get("gradYear"),
+          pr5k: formData.get("pr5k"),
+          pr3200: formData.get("pr3200"),
+          pr1600: formData.get("pr1600"),
+          gpa: formData.get("gpa"),
+          coach: formData.get("coach"),
+          contact: formData.get("contact"),
+          tier: formData.get("tier"),
+          notes: formData.get("notes"),
+          photoUrl: formData.get("photoUrl")
+        };
+
+        try {
+          const res = await fetch(SCRIPT_URL, {
+            method: "POST",
+            headers: { "Content-Type": "application/json" },
+            body: JSON.stringify(payload)
+          });
+
+          const data = await res.json();
+
+          if (data.result === "success") {
+            recruitForm.reset();
+            recruitFormMessage.textContent =
+              "✅ Recruit saved to Google Sheet.";
+            // Reload recent recruits after successful save
+            loadRecentRecruits();
+          } else {
+            recruitFormMessage.textContent =
+              "⚠️ There was an error saving. Please try again.";
+          }
+        } catch (err) {
+          console.error(err);
+          recruitFormMessage.textContent =
+            "⚠️ Network error. Check your connection or script URL.";
+        } finally {
+          recruitFormSubmit.disabled = false;
+          recruitFormSubmit.textContent = "Save to Google Sheet";
+        }
+      });
+
+      recruitFormReset.addEventListener("click", () => {
+        recruitForm.reset();
+        recruitFormMessage.textContent = "";
+      });
+    }
+
+    // ========= RECENTLY ADDED RECRUITS WIDGET =========
+    async function loadRecentRecruits() {
+      const container = document.getElementById("recentRecruitsGrid");
+      if (!container) return;
+
+      container.innerHTML = '<div class="preview-note">Loading…</div>';
+
+      try {
+        const res = await fetch(SCRIPT_URL + "?action=recent");
+        const data = await res.json();
+
+        if (!data || !Array.isArray(data.recruits) || data.recruits.length === 0) {
+          container.innerHTML = '<div class="preview-note">No recruits added yet.</div>';
+          return;
+        }
+
+        container.innerHTML = "";
+
+        data.recruits.forEach((rec) => {
+          const card = document.createElement("div");
+          card.className = "recruit-card";
+
+          const photo = document.createElement("div");
+          photo.className = "recruit-photo";
+
+          if (rec.photoUrl) {
+            const img = document.createElement("img");
+            img.src = rec.photoUrl;
+            img.alt = rec.name || "Recruit photo";
+            photo.appendChild(img);
+          } else {
+            // Fallback: initials
+            const initials = (rec.name || "?")
+              .split(" ")
+              .map((p) => p.charAt(0))
+              .join("")
+              .slice(0, 2)
+              .toUpperCase();
+            photo.textContent = initials || "?";
+          }
+
+          const info = document.createElement("div");
+          info.className = "recruit-info";
+
+          const nameLine = document.createElement("div");
+          nameLine.className = "name-line";
+          nameLine.textContent = rec.name || "Unnamed recruit";
+
+          const metaLine = document.createElement("div");
+          metaLine.className = "meta-line";
+
+          const gy = rec.gradYear ? `GY ${rec.gradYear}` : "";
+          const pr = rec.pr5k ? `5K: ${rec.pr5k}` : "";
+          const tier = rec.tier ? `Tier ${rec.tier}` : "";
+
+          metaLine.innerHTML = [
+            gy && `<span>${gy}</span>`,
+            pr && `<span>${pr}</span>`,
+            tier && `<span>${tier}</span>`
+          ].filter(Boolean).join("");
+
+          const timeLine = document.createElement("div");
+          timeLine.className = "time-line";
+          if (rec.added) timeLine.textContent = `Added: ${rec.added}`;
+
+          info.appendChild(nameLine);
+          info.appendChild(metaLine);
+          info.appendChild(timeLine);
+
+          card.appendChild(photo);
+          card.appendChild(info);
+
+          container.appendChild(card);
+        });
+      } catch (err) {
+        console.error(err);
+        container.innerHTML =
+          '<div class="preview-note">Error loading recent recruits. Check script URL or permissions.</div>';
+      }
+    }
+
+    // Load recent recruits on first page load too
+    document.addEventListener("DOMContentLoaded", loadRecentRecruits);
+  </script>
+</body>
+</html>
