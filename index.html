@@ -573,15 +573,15 @@
             </div>
             <p>The complete William Carey University Cross Country recruiting manual: philosophy, workflow, scripts, and tools.</p>
             <div class="button-row">
-              <a class="btn btn-primary" href="./Assets/WCU_Recruiting_Manual_FULL_CONTENT.pdf" target="_blank">
+              <a class="btn btn-primary" href="./Assets/WCU_CrossCountry_Recruiting_Manual_FULL.pdf" target="_blank">
                 Open Manual
               </a>
-              <a class="btn btn-outline" href="./Assets/WCU_Recruiting_Manual_FULL_CONTENT.pdf" download>
+              <a class="btn btn-outline" href="./Assets/WCU_CrossCountry_Recruiting_Manual_FULL.pdf" download>
                 Download PDF
               </a>
             </div>
             <div class="preview">
-              <iframe src="./Assets/WCU_Recruiting_Manual_FULL_CONTENT.pdf#page=1" height="260"
+              <iframe src="./Assets/WCU_CrossCountry_Recruiting_Manual_FULL.pdf#page=1" height="260"
                 title="Recruiting Manual Preview"></iframe>
             </div>
             <div class="preview-note">If the preview doesn’t load in your browser, use the download button.</div>
@@ -953,10 +953,13 @@
         };
 
         try {
+          //Build URL-encoded form body to avoid CORS preflight
+          const formBody = new URLSearchParams(payload);
+          
           const res = await fetch(SCRIPT_URL, {
             method: "POST",
-            headers: { "Content-Type": "application/json" },
-            body: JSON.stringify(payload)
+            //headers: { "Content-Type": "application/json" },
+            body: formbody,  //no custom headers 
           });
 
           const data = await res.json();
