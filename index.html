@@ -573,15 +573,15 @@
             </div>
             <p>The complete William Carey University Cross Country recruiting manual: philosophy, workflow, scripts, and tools.</p>
             <div class="button-row">
-              <a class="btn btn-primary" href="./Assets/WCU_CrossCountry_Recruiting_Manual_FULL.pdf" target="_blank">
+              <a class="btn btn-primary" href="./Assets/WCU_CrossCountry_Recruiting_Manual_Full.pdf" target="_blank">
                 Open Manual
               </a>
-              <a class="btn btn-outline" href="./Assets/WCU_CrossCountry_Recruiting_Manual_FULL.pdf" download>
+              <a class="btn btn-outline" href="./Assets/WCU_CrossCountry_Recruiting_Manual_Full.pdf" download>
                 Download PDF
               </a>
             </div>
             <div class="preview">
-              <iframe src="./Assets/WCU_CrossCountry_Recruiting_Manual_FULL.pdf#page=1" height="260"
+              <iframe src="./Assets/WCU_CrossCountry_Recruiting_Manual_Full.pdf#page=1" height="260"
                 title="Recruiting Manual Preview"></iframe>
             </div>
             <div class="preview-note">If the preview doesn’t load in your browser, use the download button.</div>
@@ -922,7 +922,7 @@
 
     // ========= GOOGLE APPS SCRIPT URL (BACKEND) =========
     // TODO: Replace this string with your actual Apps Script Web App URL
-    const SCRIPT_URL = "https://script.google.com/macros/s/AKfycbyiTcq48FwVt10pd0lL4IF0To2pjigtu8NJ7cIMI5MOnlQ1_VmIwMoGgKhdYWW9OBI6sw/exec";
+    const SCRIPT_URL = "https://script.google.com/macros/s/AKfycbwcomu3hlpXUYYtqBDXuWwzW50fVowww3ufW87TxNguvEMpurA04dDhIZJZxGIgzjJnFw/exec";
 
     // ========= RECRUIT FORM → GOOGLE SHEET =========
     const recruitForm = document.getElementById("recruitForm");
@@ -959,7 +959,7 @@
           const res = await fetch(SCRIPT_URL, {
             method: "POST",
             //headers: { "Content-Type": "application/json" },
-            body: formbody,  //no custom headers 
+            body: formBody,  //no custom headers 
           });
 
           const data = await res.json();
